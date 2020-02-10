@@ -152,6 +152,7 @@ meta:
     staging_upload_password: (( vault meta.vault "/cc:staging_upload" ))
     db_encryption_key: "" # for compability reasons
     database_encryption:
+      current_key_label: "encryption_key_0"
       keys:
         encryption_key_0:  (( vault meta.vault "/cc:db_encryption_key" ))
     temporary_use_logcache:  true

@@ -6,24 +6,74 @@ kit:
     - haproxy
     - tls
     - self-signed
-    - small-footprint
     - dns-service-discovery
     - container-routing-integrity
-    - autoscaler
+    - loggregator-forwarder-agent
     - routing-api
+    # - autoscaler
 
 params:
   env:   ci-baseline
   bosh:  snw-genesis-ci
 
-  availability_zones: [z1]
+  autoscaler_network: default
+  cf_db_network: default
+  cf_edge_network: default
+  cf_internal_network: default
+  cf_runtime_network: default
+
+  haproxy_vm_type:     default
+  postgres_vm_type:    default
+  blobstore_vm_type:   default
+  api_vm_type:         default
+  bbs_vm_type:         default
+  cell_vm_type:        default
+  diego_vm_type:       default
+  doppler_vm_type:     default
+  errand_vm_type:      default
+  loggregator_vm_type: default
+  nats_vm_type:        default
+  router_vm_type:      default
+  syslogger_vm_type:   default
+  uaa_vm_type:         default
+
+  autoscaler_api_vm_type:       default
+  autoscaler_broker_vm_type:    default
+  autoscaler_scheduler_vm_type: default
+  autoscaler_collector_vm_type: default
+  autoscaler_scaler_vm_type:    default
+  autoscaler_engine_vm_type:    default
+  autoscaler_operator_vm_type:  default
+
+  cell_instances: 4
+  availability_zones: [z1, z2]
 
   disk_type: default
-  base_domain:  10.128.9.10.netip.cc
-  postgres_vip: 10.128.9.9
+  postgres_disk_pool: default
+  blobstore_disk_pool: default
+
+  base_domain: 10.135.0.27.netip.cc
   skip_ssl_validation: true
 
-  autoscaler_network: cf-core
+  haproxy_ips: (( empty array ))
 
-  haproxy_ips:
-    - 10.128.9.10
+  postgres_vip: sql-db.service.cf.internal
+
+  set_kernel_parameters: false
+  apparmor_profile: ""
+
+instance_groups:
+- name: haproxy
+  networks:
+  - (( replace ))
+  - name: default
+
+- name: postgres
+  # using address (with bosh dns) based auth in pg_hba.conf does not work across zones
+  # this is a limitation of the flannel network used by MoltenCore
+  azs: [z0]
+  jobs:
+  - name: vip
+    properties:
+      keepalived:
+        enabled: false # use bosh dns instead

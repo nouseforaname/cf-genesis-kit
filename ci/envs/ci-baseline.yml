@@ -23,6 +23,7 @@ params:
   cf_runtime_network: default
 
   haproxy_vm_type:     default
+  scheduler_vm_type:   default
   postgres_vm_type:    default
   blobstore_vm_type:   default
   api_vm_type:         default

@@ -66,7 +66,7 @@ params:
   api_vm_type:         api
   bbs_vm_type:         bbs
   diego_cell_vm_type:  default #TODO hack because i do not know where cell is still coming from
-  scheduler_vm_type:   diego
+  scheduler_vm_type:   scheduler
   doppler_vm_type:     doppler
   errand_vm_type:      errand
   loggregator_vm_type: loggregator
